@@ -13,10 +13,10 @@ let gameSpeed = 1;
 //const GREEN = { r: 0xa6, g: 0xe0, b: 0x2c };
 //const PINK = { r: 0xfa, g: 0x24, b: 0x73 };
 //const ORANGE = { r: 0xfe, g: 0x95, b: 0x22 };
-const BLUE = { r: 0x00, g: 0x29, b: 0xfa };
-const GREEN = { r: 0x23, g: 0xd9, b: 0xb7 };
-const PINK = { r: 0xBF, g: 0x17, b: 0x36 };
-const ORANGE = { r: 0xff, g: 0xdf, b: 0x00 };
+const BLUE = { r: 0x33, g: 0xbe, b: 0xff };
+const GREEN = { r: 0x6e, g: 0xff, b: 0x33 };
+const PINK = { r: 0xff, g: 0x33, b: 0x33 };
+const ORANGE = { r: 0xfc, g: 0xff, b: 0x33 };
 const allColors = [BLUE, GREEN, PINK, ORANGE];
 
 // Gameplay
@@ -28,9 +28,13 @@ const getSpawnDelay = () => {
 };
 const doubleStrongEnableScore = 2000;
 // Number of cubes that must be smashed before activating a feature.
-const slowmoThreshold = 10;
-const strongThreshold = 25;
-const spinnerThreshold = 25;
+//const slowmoThreshold = 10;
+//const strongThreshold = 25;
+//const spinnerThreshold = 25;
+
+let slowmoThreshold = 10;
+let strongThreshold = 25;
+let spinnerThreshold = 25;
 
 // Interaction state
 let pointerIsDown = false;
@@ -58,8 +62,11 @@ const touchTrailThickness = 7;
 const touchPointLife = 120;
 const touchPoints = [];
 // Size of in-game targets. This affects rendered size and hit area.
-const targetRadius = 40;
-const targetHitRadius = 50;
+//const targetRadius = 40;
+//const targetHitRadius =50;
+let targetRadius = 40;
+let targetHitRadius =50;
+
 const makeTargetGlueColor = (target) => {
 	// const alpha = (target.health - 1) / (target.maxHealth - 1);
 	// return `rgba(170,221,255,${alpha.toFixed(3)})`;
@@ -99,7 +106,8 @@ const allShadowPolys = [];
 // Game Modes
 const GAME_MODE_RANKED = Symbol("GAME_MODE_RANKED");
 const GAME_MODE_CASUAL = Symbol("GAME_MODE_CASUAL");
-
+const GAME_MODE_CHALLENGE = Symbol("GAME_MODE_CHALLENGE");
+const GAME_MODE_GIANT = Symbol("GAME_MODE_GIANT");
 // Available Menus
 const MENU_MAIN = Symbol("MENU_MAIN");
 const MENU_PAUSE = Symbol("MENU_PAUSE");
@@ -132,6 +140,8 @@ const state = {
 const isInGame = () => !state.menus.active;
 const isMenuVisible = () => !!state.menus.active;
 const isCasualGame = () => state.game.mode === GAME_MODE_CASUAL;
+const isChallengeGame = () => state.game.mode === GAME_MODE_CHALLENGE;
+const isGiantGame = () => state.game.mode === GAME_MODE_GIANT;
 const isPaused = () => state.menus.active === MENU_PAUSE;
 
 ///////////////////
@@ -1167,14 +1177,43 @@ const cubeCountNode = $(".cube-count-lbl");
 
 function renderScoreHud() {
 	if (isCasualGame()) {
-		scoreNode.style.display = "none";
+		scoreNode.innerText = `STREAK SCORE: ${state.game.score}`;
+		scoreNode.style.display = "block";
 		cubeCountNode.style.opacity = 1;
+		//In Challenge game mode, make the cube smaller
+		changeCubeSize(40, 50);
+	}
+	else if (isGiantGame()) {
+		scoreNode.innerText = `GIANT SCORE: ${state.game.score}`;
+		scoreNode.style.display = "block";
+		cubeCountNode.style.opacity = 1;
+		//In Challenge game mode, make the cube smaller
+		//The changeCubeSize fo giant mode needs tweaking as it turns off after some edits
+		changeCubeSize(100, 100);
+		slowmoThreshold = 10;
+		strongThreshold = 25;
+		spinnerThreshold = 25;
+	} 
+	else if (isChallengeGame()) {
+		scoreNode.innerText = `CHALLENGE SCORE: ${state.game.score}`;
+		scoreNode.style.display = "block";
+		cubeCountNode.style.opacity = 1;
+		//In Challenge game mode, make the cube smaller
+		changeCubeSize(20, 35);
+		slowmoThreshold = 25;
+		strongThreshold = 0;
+		spinnerThreshold = 20;
 	} else {
 		scoreNode.innerText = `SCORE: ${state.game.score}`;
 		scoreNode.style.display = "block";
 		cubeCountNode.style.opacity = 0.65;
 	}
 	cubeCountNode.innerText = `CUBES SMASHED: ${state.game.cubeCount}`;
+
+	function changeCubeSize(inputTargetRadius, inputTargetHitRadius) {
+		targetRadius = inputTargetRadius;
+		targetHitRadius = inputTargetHitRadius;
+	}
 }
 
 renderScoreHud();
@@ -1269,6 +1308,17 @@ handleClick($(".play-casual-btn"), () => {
 	setActiveMenu(null);
 	resetGame();
 });
+handleClick($(".play-challenge-btn"), () => {
+	setGameMode(GAME_MODE_CHALLENGE);
+	setActiveMenu(null);
+	resetGame();
+});
+handleClick($(".play-giant-btn"), () => {
+	setGameMode(GAME_MODE_GIANT);
+	setActiveMenu(null);
+	resetGame();
+});
+
 
 // Pause Menu
 handleClick($(".resume-btn"), () => resumeGame());
@@ -1282,6 +1332,7 @@ handleClick($(".play-again-btn"), () => {
 
 handleClick($(".menu-btn--score"), () => setActiveMenu(MENU_MAIN));
 
+/*
 ////////////////////
 // Button Actions //
 ////////////////////
@@ -1310,6 +1361,7 @@ handleClick($(".play-again-btn"), () => {
 });
 
 handleClick($(".menu-btn--score"), () => setActiveMenu(MENU_MAIN));
+*/
 
 // actions.js
 // ============================================================================
@@ -1547,7 +1599,14 @@ function tick(width, height, simTime, simSpeed, lag) {
 			if (isInGame()) {
 				if (isCasualGame()) {
 					incrementScore(-25);
-				} else {
+				} 
+				else if (isChallengeGame()) {
+					incrementScore(-50);
+				}
+				else if (isGiantGame()) {
+					incrementScore(-50);
+				}
+				else {
 					endGame();
 				}
 			}
