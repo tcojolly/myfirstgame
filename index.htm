@@ -1,47 +1,67 @@
+<!DOCTYPE html>
+<html>
 
-<link rel="stylesheet" type="text/css" href="style.css">
+<head>
+	<meta charset="utf-8">
+	<title>Ninja Menja Game - Created by Cho Oo</title>
+	<meta name="author" content="">
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
 <body class="wrapper">
-<!-- Game canvas -->
-<canvas id="c"></canvas>
+	<!-- Game canvas -->
+	<canvas id="c"></canvas>
 
-<!-- Gameplay HUD -->
-<div class="hud">
-	<div class="hud__score">
-		<div class="score-lbl"></div>
-		<div class="cube-count-lbl"></div>
+	<!-- Gameplay HUD -->
+	<div class="hud">
+		<div class="hud__score">
+			<div class="score-lbl"></div>
+			<div class="cube-count-lbl"></div>
+		</div>
+		<div class="pause-btn">
+			<div></div>
+		</div>
+		<div class="slowmo">
+			<div class="slowmo__bar"></div>
+		</div>
 	</div>
-	<div class="pause-btn"><div></div></div>
-	<div class="slowmo">
-		<div class="slowmo__bar"></div>
-	</div>
-</div>
 
-<!-- Menu System -->
-<div class="menus">
-	<div class="menu menu--main">
-        <h1> NINJA MENJA</style></h1>
-		<button type="button" class="play-normal-btn">PLAY GAME</button>
-		<button type="button" class="play-casual-btn">CASUAL MODE</button>
-		<button type="button" class="play-challenge-btn">CHALLENGE MODE</button>
-		<button type="button" class="play-giant-btn">GIANT MODE</button>	
-        <br><br><br><h2>For computer users(and that's recommended),it's best played with a mouse!P.S.,don't forget to reload before playing a different mode.</h2>
-		<div class="credits">An 8kB game by <a href="https://cmiller.tech">Thant Cho Oo</a></div>
-	</div>
-	<div class="menu menu--pause">
-		<h1>Paused</h1>
-		<button type="button" class="resume-btn">RESUME GAME</button>
-		<button type="button" class="menu-btn--pause">MAIN MENU</button>
-	</div>
-	<div class="menu menu--score">
-		<h1>Game Over</h1>
-        <h2>Your Score:</h2>
-        
-		<div class="final-score-lbl"></div>
-		<div class="high-score-lbl"></div>
-		<button type="button" class="play-again-btn">PLAY AGAIN</button>
-		<button type="button" class="menu-btn--score">MAIN MENU</button>
-	</div>
-</div>
+	<!-- Menu System -->
+	<div class="menus">
+		<div class="menu menu--main">
+			<h1> NINJA MENJA</style>
+			</h1>
+			<button type="button" class="play-normal-btn">PLAY GAME</button>
+			<button type="button" class="play-casual-btn">CASUAL MODE</button>
+			<button type="button" class="play-challenge-btn">CHALLENGE MODE</button>
+			<button type="button" class="play-giant-btn">GIANT MODE</button>
+			<button type="button" class="play-mini-btn">MINI MODE</button>
 
+			<br><br><br>
+			<h2>For computer users(and that's recommended),it's best played with a mouse!P.S.,dont't forget to reload
+				before playing a different mode.</h2>
+			<div class="credits">An 8kB game by <a href="https://cmiller.tech">Thant Cho Oo</a></div>
+		</div>
+		<div class="menu menu--pause">
+			<h1>Paused</h1>
+			<button type="button" class="resume-btn">RESUME GAME</button>
+			<button type="button" class="menu-btn--pause">MAIN MENU</button>
+		</div>
+		<div class="menu menu--score">
+			<h1>Game Over</h1>
+			<h2>Your Score:</h2>
+
+			<div class="final-score-lbl"></div>
+			<div class="high-score-lbl"></div>
+			<button type="button" class="play-again-btn">PLAY AGAIN</button>
+			<button type="button" class="menu-btn--score">MAIN MENU</button>
+		</div>
+	</div>
+
+	<script src="game.js"></script>
 </body>
-<script src="game.js"></script>
+
+
+</html>
