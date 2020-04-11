@@ -1201,7 +1201,7 @@ function renderScoreHud() {
 		scoreNode.style.display = "block";
 		cubeCountNode.style.opacity = 1;
 		//In Mini game mode, also make the cube smaller
-		changeCubeSize(10, 10);
+		changeCubeSize(25, 25);
 		slowmoThreshold = 10;
 		strongThreshold = 25;
 		spinnerThreshold = 25;
