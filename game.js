@@ -1191,7 +1191,7 @@ function renderScoreHud() {
 		cubeCountNode.style.opacity = 1;
 		//In Challenge game mode, make the cube smaller
 		//The changeCubeSize fo giant mode needs tweaking as it turns off after some edits
-		changeCubeSize(100, 100);
+		changeCubeSize(270, 270);
 		slowmoThreshold = 10;
 		strongThreshold = 25;
 		spinnerThreshold = 25;
