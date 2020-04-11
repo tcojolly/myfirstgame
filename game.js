@@ -108,6 +108,7 @@ const GAME_MODE_RANKED = Symbol("GAME_MODE_RANKED");
 const GAME_MODE_CASUAL = Symbol("GAME_MODE_CASUAL");
 const GAME_MODE_CHALLENGE = Symbol("GAME_MODE_CHALLENGE");
 const GAME_MODE_GIANT = Symbol("GAME_MODE_GIANT");
+const GAME_MODE_MINI = Symbol("GAME_MODE_MINI");
 // Available Menus
 const MENU_MAIN = Symbol("MENU_MAIN");
 const MENU_PAUSE = Symbol("MENU_PAUSE");
@@ -142,6 +143,7 @@ const isMenuVisible = () => !!state.menus.active;
 const isCasualGame = () => state.game.mode === GAME_MODE_CASUAL;
 const isChallengeGame = () => state.game.mode === GAME_MODE_CHALLENGE;
 const isGiantGame = () => state.game.mode === GAME_MODE_GIANT;
+const isMiniGame = () => state.game.mode === GAME_MODE_MINI;
 const isPaused = () => state.menus.active === MENU_PAUSE;
 
 ///////////////////
@@ -1194,6 +1196,16 @@ function renderScoreHud() {
 		strongThreshold = 25;
 		spinnerThreshold = 25;
 	} 
+	else if (isMiniGame()) {
+		scoreNode.innerText = `SCORE: ${state.game.score}`;
+		scoreNode.style.display = "block";
+		cubeCountNode.style.opacity = 1;
+		//In Mini game mode, also make the cube smaller
+		changeCubeSize(10, 10);
+		slowmoThreshold = 10;
+		strongThreshold = 25;
+		spinnerThreshold = 25;
+	}
 	else if (isChallengeGame()) {
 		scoreNode.innerText = `CHALLENGE SCORE: ${state.game.score}`;
 		scoreNode.style.display = "block";
@@ -1308,13 +1320,22 @@ handleClick($(".play-casual-btn"), () => {
 	setActiveMenu(null);
 	resetGame();
 });
+
 handleClick($(".play-challenge-btn"), () => {
 	setGameMode(GAME_MODE_CHALLENGE);
 	setActiveMenu(null);
 	resetGame();
 });
+
 handleClick($(".play-giant-btn"), () => {
 	setGameMode(GAME_MODE_GIANT);
+	setActiveMenu(null);
+	resetGame();
+});
+
+
+handleClick($(".play-mini-btn"), () => {
+	setGameMode(GAME_MODE_MINI);
 	setActiveMenu(null);
 	resetGame();
 });
@@ -1604,7 +1625,10 @@ function tick(width, height, simTime, simSpeed, lag) {
 					incrementScore(-50);
 				}
 				else if (isGiantGame()) {
-					incrementScore(-50);
+					incrementScore(-10);
+				}
+				else if (isMiniGame()) {
+					incrementScore(-10);
 				}
 				else {
 					endGame();
